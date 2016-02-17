@@ -50,7 +50,7 @@ After the series of file upload attempts, we check the document root for existan
 http://example.org/test.jpg
 
 The default configuration of get_docroots.pl provides us with a full list of possible payloads covering both above scenarios.
-Its list of known document root paths is generated the same way --os-shell feature in sqlmap does. 
+Its list of known document root paths is generated the same way as with --os-shell feature in sqlmap. 
 Please see the sample_results.txt file to see the results procuded with default configuration.
 
 
