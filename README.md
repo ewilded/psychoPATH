@@ -4,13 +4,13 @@ The general assumptions are as follows:
 - we have a file upload function in the application and we have some sample, valid file that is accepted (e.g. a JPEG image)
 - our goal is to upload an executable (a webshell), but we do not know what the remote document root is, we also do not know what are the file upload restrictions in place
 
-First of all, we will attempt to find a way to reach the document root. After we achieve that, we can focus on uploading malicious files instead of legitimate ones. It is better to start with a legitimate file in order to decrease the likehood of failure due to forbidden content/extension and focus on reaching the document root first. And this phase is the only purpose of this tool.
+First of all, we will attempt to find a way to reach the document root. After we achieve this, we can focus on uploading malicious files instead of legitimate ones. It is better to start with a legitimate file in order to decrease the likehood of failure due to forbidden content/extension and focus on reaching the document root first. And this phase is the only purpose of this tool.
 
 Reaching the document root
 
 There are two scenarios we may face when blindly attacking the upload dir:
 
-a) the upload dir is located in the document root, in such case we should do fine without knowing its path at all, as it should be sufficient to attack with path traversal payloads reflecting several layers of nesting in order to hit the document root itself. It might be reasonable to employ a basic evasive technique at this point already (for non-recursive removals of '../' and './':
+a) the upload dir is located in the document root, in such case we should do fine without knowing its path at all, as it should be sufficient to attack with path traversal payloads reflecting several layers of nesting in order to hit the document root itself. It might be reasonable to employ a basic evasive technique at this point already (for non-recursive removals of '../' and './'):
 
 ./../test.jpg
 ./../../test.jpg
@@ -54,3 +54,6 @@ Its list of known document root paths is generated the same way as with --os-she
 Please see the sample_results.txt file to see the results procuded with default configuration.
 
 If the file is there, we have reached the document root and now we can use the relevant traversal payload in order to try to bypass any file upload restrictions (extension, content, mime type, size, etc).
+
+In order to make identification of the golden payload (the one that actually resulted in a successful file creation in the document root), we can use unique markers (e.g. number counter) placed in the contents of the file. The easiest way to do it is by using Burp Intruder with the first holder in the filename (our traversal payloads list) and the second one embedded in the file content (if dealing with images, exif tags are a safe place). We choose Pitchfork as the attack type and assign numbers to the second holder. 
+If the file upload is successfull, by its contents we will be able to easily identify the exact request that created it.
