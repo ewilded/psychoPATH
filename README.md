@@ -41,11 +41,16 @@ a) the upload dir is located in the document root, in such case we should do fin
 ..//...//...//...//...//...//...//...//test.jpg
 ..//...//...//...//...//...//...//...//...//test.jpg
 
+
+b) the upload directory is located outside the document root, that is why we need to employ both directory traversal and full document root path guessing. 
+
+
+
 After the series of file upload attempts, we check the document root for existance of the file we tried to create:
 http://example.org/test.jpg
 
-
-b) the upload directory is located outside the document root, that is why we need to employ both directory traversal and full document root path guessing. Please use the get_docroots.pl script in order to generate the payloads (it is based on the way --os-shell feature in sqlmap generates potential document roots). Then use them all and check for existance of the file in the document root.
+The default configuration of get_docroots.pl provides us with a full list of possible payloads covering both above scenarios.
+Its list of known document root paths is generated the same way --os-shell feature in sqlmap does. 
 
 
 2) Bypassing any file upload restrictions
