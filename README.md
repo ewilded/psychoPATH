@@ -45,7 +45,7 @@ a) the upload dir is located in the document root, in such case we should do fin
 b) the upload directory is located outside the document root, that is why we need to employ both directory traversal and full document root path guessing. 
 
 
-So we try both scenarios ine one go. 
+So, we try both scenarios in one go. 
 After the series of file upload attempts, we check the document root for existance of the file we tried to create:
 http://example.org/test.jpg
 
