@@ -56,4 +56,4 @@ Please see the sample_results.txt file to see the results procuded with default 
 
 2) Bypassing any file upload restrictions
 
-If the file is there, we use the relevant traversal payload (the proper number of directories to jump out from is important) in order to bypass any file upload restrictions (extension, content, mime type, size, etc). We may want to employ evasive techniques and use payload_generator.pl to generate a full list of versions of the right payload, according to all supported evasive techniques.
+If the file is there, we use the relevant traversal payload in order to bypass any file upload restrictions (extension, content, mime type, size, etc). We may want to employ evasive techniques and use payload_generator.pl to generate a full list of versions of the right payload, according to all supported evasive techniques.
