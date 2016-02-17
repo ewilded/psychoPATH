@@ -3,7 +3,7 @@
 # This little helper script attempts to generate all potential DOCUMENT_ROOT full paths for a given application.
 # Such output is intended for use with tools like Burp Intruder in order to blindly exploit vulnerable file upload implementations.
 # Coded by ewilded (February 2016)
-# The initial list of directories and their suffices was taken from sqlmap
+# The initial list of directories and their suffixes was taken from sqlmap
 
 # Please keep in mind to provide relevant configuration below (short and long name of the target, as its DOC_ROOT is highly likely derived from that value)
 
