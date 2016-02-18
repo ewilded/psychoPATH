@@ -8,9 +8,10 @@ First of all, we will attempt to find a way to reach the document root. After we
 
 Reaching the document root
 
+It might be reasonable to employ a basic evasive technique at this point already (for non-recursive removals of '../' and './').
 There are two scenarios we may face when blindly attacking the upload dir:
 
-a) the upload dir is located in the document root, in such case we should do fine without knowing its path at all, as it should be sufficient to attack with path traversal payloads reflecting several layers of nesting in order to hit the document root itself. It might be reasonable to employ a basic evasive technique at this point already (for non-recursive removals of '../' and './'):
+a) the upload dir is located in the document root, in such case we should do fine without knowing its path at all, as it should be sufficient to attack with path traversal payloads reflecting several layers of nesting in order to hit the document root itself. 
 
 ./../test.jpg
 ./../../test.jpg
@@ -51,7 +52,7 @@ http://example.org/test.jpg
 
 The default configuration of get_docroots.pl provides us with a full list of possible payloads covering both above scenarios.
 Its list of known document root paths is generated the same way as with --os-shell feature in sqlmap. 
-Please see the sample_results.txt file to see the results procuded with default configuration.
+Please see the sample_results.txt file to see the results produced with default configuration.
 
 If the file is there, we have reached the document root and now we can use the relevant traversal payload in order to try to bypass any file upload restrictions (extension, content, mime type, size, etc).
 
