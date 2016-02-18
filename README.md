@@ -3,7 +3,7 @@ Blindly exploiting insecure file upload implementations
 The general assumptions are as follows:
 - we have a file upload function in the application and we have some sample, valid file that is accepted (e.g. a JPEG image)
 - our goal is to upload an executable (a webshell), but we do not know what the remote document root is, nor what the upload directory is
-- we also do not know what are the file upload restrictions in place, but that's beside the point as long as we cannot reach the document
+- we also do not know what are the file upload restrictions in place, but that's beside the point as long as we cannot reach the document root
 
 First of all, we will attempt to find a way to reach the document root. After we achieve this, we can focus on uploading malicious files instead of legitimate ones. It is better to start with a legitimate file in order to decrease the likehood of failure due to forbidden content/extension and focus on reaching the document root first. And this phase is the only purpose of this tool.
 
