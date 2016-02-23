@@ -5,7 +5,7 @@ The general assumptions are as follows:
 - our goal is to upload an executable (a webshell), but we do not know what the remote document root is, nor what the upload directory is
 - we also do not know what are the file upload restrictions in place, but that's beside the point as long as we cannot reach the document root
 
-First of all, we will attempt to find a way to reach the document root. After we achieve this, we can focus on uploading malicious files instead of legitimate ones. It is better to start with a legitimate file in order to decrease the likehood of failure due to forbidden content/extension and focus on reaching the document root first. And this phase is the only purpose of this tool.
+First of all, we will attempt to find a way to reach the document root. After we achieve this, we can focus on uploading malicious files instead of legitimate ones. It is better to start with a legitimate file in order to decrease the likehood of a failure due to forbidden content/extension and focus on reaching the document root first. And this phase is the only purpose of this tool (it only  generates a set of payloads to use with Burp Intruder).
 
 Reaching the document root
 
