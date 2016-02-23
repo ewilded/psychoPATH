@@ -53,9 +53,9 @@ http://example.org/test.jpg
 
 The default configuration of get_docroots.pl provides us with a full list of possible payloads covering both above scenarios.
 Its list of known document root paths is generated the same way as with --os-shell feature in sqlmap. 
-Please see the sample_results.txt file to see the results produced with default configuration.
+Please see the sample_results.txt file to see the results produced with the default configuration.
 
 If the file is there, we have reached the document root and now we can use the relevant traversal payload in order to try to bypass any file upload restrictions (extension, content, mime type, size, etc).
 
-In order to make identification of the golden payload (the one that actually resulted in a successful file creation in the document root), we can use unique markers (e.g. number counter) placed in the contents of the file. The easiest way to do it is by using Burp Intruder with the first holder in the filename (our traversal payloads list) and the second one embedded in the file content (if dealing with images, exif tags are a safe place). We choose Pitchfork as the attack type and assign numbers to the second set of payloads. 
+In order to identify the golden payload (the one that actually resulted in a successful file creation in the document root), we can use unique markers (e.g. number counter) placed in the contents of the file. The easiest way to do it is by using Burp Intruder with the first holder in the filename (our traversal payloads list) and the second one embedded in the file content (if dealing with images, exif tags are a safe place). We choose Pitchfork as the attack type and assign numbers to the second set of payloads. 
 If the file upload is successfull, by its contents we will be able to easily identify the exact request that created it.
