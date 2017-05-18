@@ -3,7 +3,7 @@ Original work by: Julian H. https://github.com/ewilded/psychoPATH
 # psychoPATH - a blind webroot file upload detection tool
 
 ## What is psychoPATH?
-This tool is a customizable payload generator intended for blindly detecting web file upload implementations allowing to write files into the webroot (aka document root). The "blind" aspect is the key here and is inherent to dynamic testing usually conducted with no access to the source code or the filesystem. 
+This tool is a customizable payload generator designed for blindly detecting web file upload implementations allowing to write files into the webroot (aka document root). The "blind" aspect is the key here and is inherent to dynamic testing usually conducted with no access to the source code or the filesystem. 
 
 This tool helps to discover several vulnerable and not easily-detectable scenarios:
 - the upload function is vulnerable to path traversal and the upload directory is inside of the document root
