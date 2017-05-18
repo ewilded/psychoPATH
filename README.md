@@ -42,19 +42,20 @@ In order to get our file saved in the document root instead of the default uploa
 
 Assuming we cannot see any detailed error messages from the application and we have no access to the file system - all we know is that it is running on Apache Tomcat and that the URL is `http://example.org/uploadbare_traversal_outside_webroot`. In order to come up with this particular payload, we would have to try several possible document root variants, like:
 
-/opt/tomcat8/example
-/opt/tomcat5/webapps/example.org
-/var/lib/tomcat6/webapps/uploadbare_traversal_outside_webroot
-/var/lib/tomcat7/webapps/uploadbare_traversal_outside_webroot
-/var/lib/tomcat8/webapps/uploadbare_traversal_outside_webroot
-/opt/tomcat7/webapps/example
-/opt/tomcat8/webapps/example.org
-/opt/tomcat6/webapps/uploadbare_traversal_outside_webroot
-/opt/tomcat7/webapps/example
-/opt/tomcat8/webapps/example.org
-/opt/tomcat5/webapps/uploadbare_traversal_outside_webroot
+- /opt/tomcat8/example
+- /opt/tomcat5/webapps/example.org 
+- /var/lib/tomcat6/webapps/uploadbare_traversal_outside_webroot
+- /var/lib/tomcat7/webapps/uploadbare_traversal_outside_webroot
+- /var/lib/tomcat8/webapps/uploadbare_traversal_outside_webroot
+- /opt/tomcat7/webapps/example
+- /opt/tomcat8/webapps/example.org
+- /opt/tomcat6/webapps/uploadbare_traversal_outside_webroot
+- /opt/tomcat7/webapps/example
+- /opt/tomcat8/webapps/example.org
+- /opt/tomcat5/webapps/uploadbare_traversal_outside_webroot
 [...]
- and so on. The remote webroot can depend on the platform, version, OS type, OS version as well as on internal standards within an organisation.
+
+and so on. The remote webroot can depend on the platform, version, OS type, OS version as well as on internal standards within an organisation.
 
 Based on well-known server-specific webroot paths + target hostname + user-specified variables, psychoPATH attempts to generate a comprehensive list of all potentially valid paths to use while blindly searching for vulnerable file upload. This approach was directly inspired by the technique used in `--os-shell` mode in `sqlmap`.
 
@@ -153,12 +154,12 @@ We hit the "Start attack" button and watch the results (now we are explicitly in
 ![Demo Screenshot](screenshots/verification_step3.png?raw=true "Usage example")
 
 As we can see, the file has been created under `uploadbare_traversal_outside_webroot/a.jpg`. By looking at the payload marker spot, we can identify 585 as the number of the golden payload. 
-We look back to the Intruder attack and search for the request with Payload 2 equal 585:
+We look back to the Intruder attack and search for the request with Payload 2 equal to 585 (normally there would be a bit more, like ten or few dozens of site map-derived directories queried):
 ![Demo Screenshot](screenshots/verification_step3.png?raw=true "Usage example")
 
 Now we know the golden payload to reach the document root was `./../../../../../../..//var/lib/tomcat8/webapps//uploadbare_traversal_outside_webroot/a.jpg`.
 
-For other two examples, the results for payloads that have worked, would look as follows, respectively:
+For other two examples, the results for the payloads that have worked, would look as follows, respectively:
 /uploadbare_traversal_inside_webroot:
 ![Demo Screenshot](screenshots/verification_case_2_step_1.png?raw=true "Usage example")
 ![Demo Screenshot](screenshots/verification_case_2_step_2.png?raw=true "Usage example")
