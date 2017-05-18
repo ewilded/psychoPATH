@@ -179,3 +179,4 @@ For other two examples, the results for the payloads that have worked, would loo
 - add support for default 'work' directories on tomcat, like /var/lib/tomcat8/work/Catalina/localhost/uploadbare_traversal_inside_webroot/nowaytofindme/tmp/a.jpg
 - nice to have - in  case of a positive result, automatically track back the payload that did the trick
 - do optimisations (get rid of reduntant payloads, e.g. docroots prepended with traversal sequences of different lengths - just use long one instead)
+- add a "Copy to clipboard" button for generated payloads, so the output payloads can be used with other tools
