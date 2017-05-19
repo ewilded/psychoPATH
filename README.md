@@ -12,7 +12,7 @@ This tool helps to discover several vulnerable and not easily-detectable scenari
 
 The purpose of creating this tool was to automate the detection of these non-trivial web root file uploads.
 
-Neither this tool or this write up focus on the possible ways of circumventing any mechanisms preventing one from controlling the uploaded file contents/extension; which simply is the natural next step once we know we can upload legitimate files to the webroot. One thing at a time, for now we just want to detect if we can upload a file anywhere in the webroot.
+At this point, controlling the uploaded file contents/extension is not the focus. One thing at a time, first we just want to detect if we can upload a *legitimate* file anywhere in the webroot.
 
 ## Inisght into scenarios
 ### path traversal + upload dir outside the webroot
@@ -62,19 +62,19 @@ Based on well-known server-specific webroot paths + target hostname + user-speci
 
 ### path traversal + upload dir inside of the webroot
 
-Let's go to our next scenario then, which will be a slightly modified versio of the previous example.
-The code remains the same, traversal-vulnerable. The only different is the configured upload directory. Instead of absolute `/tmp/`, we use relative `nowaytofindme/tmp`, which in our case effectively revolves to `/var/lib/tomcat8/webapps/uploadbase_traversal_inside_webroot/nowaytofindme/tmp`.
+Let's go to our next scenario then, which will be a slightly modified version of the previous example.
+The code remains the same, traversal-vulnerable. The only difference is the configured upload directory. Instead of `/tmp/`, we use `/var/lib/tomcat8/webapps/uploadbase_traversal_inside_webroot/nowaytofindme/tmp`.
 
 The `nowaytofindme/tmp` directory is not explicitly linked by the application and there is no way to guess it with a dictionary-based enumeration approach.
 
 Luckily for us, the application is still vulnerable to path traversal.
-We do not even need to guess the webroot. The payload to do the trick is simply `../../a.jpg`.
+We do not even need to guess the webroot. The payload to do the trick (put the file to `/var/lib/tomcat8/webapps/uploadbase_traversal_inside_webroot`, so it can be accessed by requesting `http://example.org/uploadbase_traversal_inside_webroot/a.jpg` is simply `../../a.jpg`.
 
 ### No path traversal + upload dir inside the webroot
 
-The third example is not vulnerable to path traversal. The upload directory is located in the webroot (`logs/tmp` -> `/var/lib/tomcat8/webapps/uploadbase_traversal_inside_webroot/logs/tmp`). We already know it exists, but we would not normally suspect this could be the actual upload directory (no listing, uploaded file is not explicitly linked by the application).
+The third example is not vulnerable to path traversal. The upload directory is located in the webroot (`logs/tmp` -> `/var/lib/tomcat8/webapps/uploadbase_traversal_inside_webroot/logs/tmp`). We already know it exists, supposedly among multiple other directories, like `javascript/`, `css/` or `images/` - but we would not normally suspect any of these could be the actual upload directory (no directory listing + the uploaded file is not explicitly linked by the application).
 
-So, the payload is simply `a.jpg`. The file (or its copy) is put under `logs/tmp/a.jpg` - but no sane person would search for the file they just uploaded in a directory/subdirectory called `logs/`. psychoPATH is not a sane person ;)
+So, the payload is simply `a.jpg`. The file (or its copy) is put under `logs/tmp/a.jpg` - but no sane person would search for the file they just uploaded in a directory/subdirectory called `logs/tmp`. psychoPATH is not a sane person.
 
 ### Other possible issues with traversal-vulnerable cases
 There might be another vulnerable, hard to discover variant of a file upload function prone to path traversal. 
@@ -83,9 +83,9 @@ Both traversal cases described above would not get detected if there was no +w p
 ### Are any of these scenarios even likely?
 Not very (although all met in the wild, they are just quite rare), this is why it appeared sensible to automate the entire check.
 
-Speaking of path traversal, *most* of today's frameworks and languages are path traversal-proof. Still, sometimes they are not used properly. When it comes to languages, they usually (e.g. PHP) strip any path sequences from the standard variable holding the POST-ed file (`Content-Disposition: form-data; name="file"; filename="test.jpg"`), still it is quite frequent the application is using another user-supplied variable to rename the file after upload (and this is our likely-succsful injection point).
+Speaking of path traversal, *most* of today's frameworks and languages are path traversal-proof. Still, sometimes they are not used properly. When it comes to languages, they usually (e.g. PHP) strip any path sequences from the standard variable holding the POST-ed file (`Content-Disposition: form-data; name="file"; filename="test.jpg"`), still it is quite frequent the application is using another user-supplied variable to rename the file after upload (and this is our likely-successful injection point).
 
-When it comes to uploading files to hidden/not explicitly linked directories in the document root (those explicitly linked like `Your file is here: <a href='uploads/a.jpg'>uploads/a.jpg</a>` are trivial to find, no tools needed), it is usually a result of weird development practices and/or some forgotten 'temporary' code put together for testing - and never removed. Still, it happens and it is being missed, as no sane person would think of e.g. searching for the file they just uploaded in a webroot subdirectory called 'logs/tmp'.
+When it comes to uploading files to hidden/not explicitly linked directories in the document root (those explicitly linked like `Your file is here: <a href='uploads/a.jpg'>uploads/a.jpg</a>` are trivial to find, no tools needed), it is usually a result of weird development practices and/or some forgotten 'temporary' code put together for testing - and never removed. Still, it happens and it is being missed, as, again, no sane person would think of e.g. searching for the file they just uploaded in a webroot subdirectory called `logs/tmp`.
 
 
 ## The algorithm
@@ -93,9 +93,9 @@ When it comes to uploading files to hidden/not explicitly linked directories in 
 The following is a general algorithm we employ to perform blind detection of any of the cases mentioned above:
 - upload a legitimate file that is accepted by the application (a benign filename, extension, format and size) - we want to avoid false negatives due to any additional validation checks performed by the application
 - estimate the possible potentially valid webroots, including their variants with webroot-located subdirectories and path traversal payloads (both relative, like `../../a.jpg` and absolute, like `./../../../var/lib/tomcat6/webapps/servletname/a.jpg`, `./../../../var/lib/tomcat6/webapps/servletname/img/a.jpg` and so on)
-- attempt to upload the file using all the payloads from the step above, placing a unique string in each file we attempt to upload
-- we search for the uploaded file by attempting GETs to all known directories in the webroot, e.g. http://example.org/a.jpg, http://example.org/img/a.jpg and so on
-- if we find the file in any of the locations, we look into its contents to identify the unique string (payload mark), so we can track down the successful payload
+- attempt to upload the file using all the payloads from the step above, placing a unique string in each file we attempt to upload (this step is automated and customizable)
+- search for the uploaded file by attempting GETs to all known directories in the webroot, e.g. http://example.org/a.jpg, http://example.org/img/a.jpg and so on (this step is automated as well)
+- if we find the file in any of the locations (this step is automated as well), we look into its contents to identify the unique string (payload mark), so we can track down the successful payload 
 
 ## psychoPATH usage
 
@@ -132,7 +132,7 @@ Then we proceed to the second payload set (the payload mark).
 For the first payload, we change the type from "Simple list" to "Extension generated". We choose the "Payload marker" extension generator:
 ![Demo Screenshot](screenshots/payload_two_setting.png?raw=true "Usage example")
 
-We hit "Start attack" button and watch the results.
+We hit the "Start attack" button and watch the results.
 ![Demo Screenshot](screenshots/results_0.png?raw=true "Usage example")
 
 It might be handy to sort the responses by the status code/any other property of the server's response:
@@ -171,6 +171,8 @@ For other two examples, the results for the payloads that have worked, would loo
 ![Demo Screenshot](screenshots/verification_case_3_step_3.png?raw=true "Usage example")
 
 ### TODO
+- use pure traversals (no docroot appended) first
+- mention the presentation and the perl script
 - separate apache-like suffixes from the main list, they are there by default and do not go away once other than all/apache webroot set is picked
 - more configuration options (switches for evasive techniques etc.)
 - add padding to the payload markers in order to avoid any potential validation problems while uploading binary formats
