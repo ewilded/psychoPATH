@@ -155,7 +155,7 @@ We hit the "Start attack" button and watch the results (now we are explicitly in
 
 As we can see, the file has been created under `uploadbare_traversal_outside_webroot/a.jpg`. By looking at the payload marker spot, we can identify 585 as the number of the golden payload. 
 We look back to the Intruder attack and search for the request with Payload 2 equal to 585 (normally there would be a bit more, like ten or few dozens of site map-derived directories queried):
-![Demo Screenshot](screenshots/verification_step3.png?raw=true "Usage example")
+![Demo Screenshot](screenshots/verification_step4.png?raw=true "Usage example")
 
 Now we know the golden payload to reach the document root was `./../../../../../../..//var/lib/tomcat8/webapps//uploadbare_traversal_outside_webroot/a.jpg`.
 
