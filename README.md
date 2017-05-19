@@ -150,11 +150,11 @@ In the Payloads section, again we change from "Simple" to "Extension generated".
 We UNCHECK the the default "URL-encode these characters" box: 
 ![Demo Screenshot](screenshots/verification_step2.png?raw=true "Usage example")
 
-We hit the "Start attack" button and watch the results (now we are explicitly interested in getting "200 OK" response):
+We hit the "Start attack" button and watch the results (now we are explicitly interested in getting "200 OK" response).  Normally there would be a bit more, like ten or few dozens of site map-derived directories queried, in the example below it's just one (`uploadbare_traversal_outside_webroot`):
 ![Demo Screenshot](screenshots/verification_step3.png?raw=true "Usage example")
 
 As we can see, the file has been created under `uploadbare_traversal_outside_webroot/a.jpg`. By looking at the payload marker spot, we can identify 585 as the number of the golden payload. 
-We look back to the Intruder attack and search for the request with Payload 2 equal to 585 (normally there would be a bit more, like ten or few dozens of site map-derived directories queried):
+We look back to the Intruder attack and search for the request with Payload 2 equal to 585:
 ![Demo Screenshot](screenshots/verification_step4.png?raw=true "Usage example")
 
 Now we know the golden payload to reach the document root was `./../../../../../../..//var/lib/tomcat8/webapps//uploadbare_traversal_outside_webroot/a.jpg`.
