@@ -150,7 +150,7 @@ This is required to let the plugin know about the target host and protocol, so i
 
 Now we send the request to Intruder. 
 We set the attack type to Pitchfork.
-Then we need to select two payload holders. One is the file name value we are about to inject into. The other is just a section in the uploaded file content - this is where the unique payload mark will be put:
+Then we need to select two payload holders. One is the file name value we are about to inject into. The other is just a section in the uploaded file content - this is where the unique payload mark will be put. Currently payload marks have fixed length of 7 characters. When injecting into image formats, the safest way is to mark exactly seven characters of a string - e.g. a piece of exif data. This way we won't encounter false negatives if the application is checking the validity of the image file before putting it into the upload directory of our interest:
 ![Demo Screenshot](screenshots/intruder_attack_setup.png?raw=true "Usage example")
 
 Then we move to the Payloads tab. 
