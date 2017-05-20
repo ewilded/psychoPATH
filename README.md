@@ -138,8 +138,7 @@ The {TARGET} holder is automatically replaced with elements from the Targets lis
 
 All the lists can be manually adjusted by using relevant Paste, Load, Remove and Add buttons.
 
-The Traversals and Doc roots lists offer several sub-groups:
-![Demo Screenshot](screenshots/traversal_groups.png?raw=true "Usage example")
+The Doc roots lists offer several sub-groups:
 ![Demo Screenshot](screenshots/docroot_groups.png?raw=true "Usage example")
 
 By default, all sub-groups are included as basic payload-building units.
