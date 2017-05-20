@@ -114,6 +114,7 @@ A filter removing all occurrences of `..` or `/` does not seem to be bypassable 
 2)
 `...//...//...//...//...//...//...//...//...//` -> rm `./` -> `../../../../../../../../../` OK
 
+
 3) 
 `.....///.....///.....///.....///.....///.....///.....///` -> rm `../` -> `...//...//...//...//...//...//...//` -> rm `./` -> `../../../../../../../`  OK
 
@@ -121,6 +122,7 @@ A filter removing all occurrences of `..` or `/` does not seem to be bypassable 
 `.....///.....///.....///.....///.....///.....///.....///` -> rm `./` -> `....//....//....//....//....//....//....//` -> rm `../` -> `../../../../../../../` OK
 
 So, we only need three evasive payloads:
+
 - `....//`
 - `...//`
 - `.....///`
@@ -198,15 +200,16 @@ For other two examples, the results for the payloads that have worked, would loo
 ![Demo Screenshot](screenshots/verification_case_3_step_2.png?raw=true "Usage example")
 ![Demo Screenshot](screenshots/verification_case_3_step_3.png?raw=true "Usage example")
 
+## The perl script 
+Initially this tool was developed as a perl script - which is still available, although no longer maintained at the moment.
+
 ### TODO
-- use pure traversals (no docroot appended) first
-- mention the presentation and the perl script
+- test on different resolution, make sure the project is easily runnable/importable
 - separate apache-like suffixes from the main list, they are there by default and do not go away once other than all/apache webroot set is picked
-- more configuration options (switches for evasive techniques etc.)
-- add padding to the payload markers in order to avoid any potential validation problems while uploading binary formats
+- more examples of test cases
+- test evasive techniques involving the windows \ backslash in different environments
+- Nice-to-haves:
 - implement windows support
-- implement directory-suffix traversals (traversals relative to the unknown document root + directories from the site map)
-- add support for default 'work' directories on tomcat, like /var/lib/tomcat8/work/Catalina/localhost/uploadbare_traversal_inside_webroot/nowaytofindme/tmp/a.jpg
-- nice to have - in  case of a positive result, automatically track back the payload that did the trick
-- do optimisations (get rid of reduntant payloads, e.g. docroots prepended with traversal sequences of different lengths - just use long one instead)
 - add a "Copy to clipboard" button for generated payloads, so the output payloads can be used with other tools
+- add support for ZIP traversals? :>
+- in  case of a positive result, automatically track back the payload that did the trick (instead of the dir check mode?)
