@@ -127,6 +127,9 @@ So, we only need three evasive payloads:
 - `...//`
 - `.....///`
 
+## Optimization
+To reduce the eventual number of payloads, by default the tool does not prepend the same document root with traversal strings which differ only in the number of the traversal sequences they consist of (e.g. `../` vs `../../` vs `../../../`) - as these are redundant when used with absolute paths. Instead, only the longest variant is used, e.g. `.....///.....///.....///.....///.....///.....///.....///var/lib/tomcat8/webapps/upload`. This significantly reduces the number of payloads sent. It might, however, be an issue - if the variable we are injecting into is somehow limited on its length, e.g. application rejects any values longer than 45 characters and the upload directoru is `/tmp` - in that case `.....///var/lib/tomcat8/webapps/upload` would do the trick instead. If you are worried about the payload length and you care less about the number of payloads, turn optimization off. 
+
 ## psychoPATH usage
 
 The extension interface consists of several lists of elements used to build permutations of all potentially valid payloads:
