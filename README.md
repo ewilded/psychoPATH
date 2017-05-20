@@ -97,6 +97,34 @@ The following is a general algorithm we employ to perform blind detection of any
 - search for the uploaded file by attempting GETs to all known directories in the webroot, e.g. http://example.org/a.jpg, http://example.org/img/a.jpg and so on (this step is automated as well)
 - if we find the file in any of the locations (this step is automated as well), we look into its contents to identify the unique string (payload mark), so we can track down the successful payload 
 
+## The evasive payloads
+The basic traversal payload is `../`, or more generally `<DOT><DOT><SLASH>` (a holder-based approach will become handy once Windows support + encodings are involved).
+
+The following are the potential bypassable filter scenarios:
+1) removing only `../`
+2) removing only `./`
+3) removing `../` and then `./`
+4) removing `./` and then `../`
+
+A filter removing all occurrences of `..` or `/` does not seem to be bypassable (please let me know if I am wrong).
+
+1)
+`....//....//....//....//....//....//....//....//` -> rm `../`-> `../../../../../../../../` OK
+
+2)
+`...//...//...//...//...//...//...//...//...//` -> rm `./` -> `../../../../../../../../../` OK
+
+3) 
+`.....///.....///.....///.....///.....///.....///.....///` -> rm `../` -> `...//...//...//...//...//...//...//` -> rm `./` -> `../../../../../../../`  OK
+
+4) 
+`.....///.....///.....///.....///.....///.....///.....///` -> rm `./` -> `....//....//....//....//....//....//....//` -> rm `../` -> `../../../../../../../` OK
+
+So, we only need three evasive payloads:
+- `....//`
+- `...//`
+- `.....///`
+
 ## psychoPATH usage
 
 The extension interface consists of several lists of elements used to build permutations of all potentially valid payloads:
