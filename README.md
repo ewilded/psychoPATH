@@ -231,7 +231,6 @@ We simply run "Start attack" and watch how each of the evasive techniques works 
 Initially this tool was developed as a perl script - which is still available, although no longer maintained at the moment.
 
 ### TODO
-- present examples on how to use psychoPATH to discover LFI (evasive techniques)/ and selective content discovery (dir checking mode)
 - test on different resolution, make sure the project is easily runnable/importable
 - separate apache-like suffixes from the main list, they are there by default and do not go away once other than all/apache webroot set is picked
 - more examples of test cases
