@@ -1,21 +1,22 @@
 Original work by: Julian H. https://github.com/ewilded/psychoPATH
 
-# psychoPATH - a blind webroot file upload detection tool
+# psychoPATH - a blind webroot file upload & LFI detection tool
 ![Logo](logo_by_Sponge_Nutter.png?raw=true "Logo by Sponge Nutter")
 ## What is psychoPATH?
-This tool is a customizable payload generator designed for blindly detecting web file upload implementations allowing to write files into the webroot (aka document root). The "blind" aspect is the key here and is inherent to dynamic testing usually conducted with no access to the source code or the filesystem. 
+This tool is a customizable payload generator, initially designed to automate blind detection of web file upload implementations allowing to write files into the webroot (aka document root). The "blind" aspect is the key here and is inherent to dynamic testing usually conducted with no access to the source code or the filesystem. 
 
-This tool helps to discover several vulnerable and not easily-detectable scenarios:
-- the upload function is vulnerable to path traversal and the upload directory is inside of the document root
-- the upload function is vulnerable to path traversal and the upload directory is outside the document root
-- the upload function is not vulnerable to path traversal, but the upload directory is inside of the document root, with no direct links to the uploaded file exposed by the application
+Shortly after implementation it turned out the tool can also be very handy in hunting Local File Inclusion aka arbitrary file reading issues involving path traversal.
 
-The purpose of creating this tool was to automate the detection of these non-trivial web root file uploads.
+This tool helps to discover several kinds of vulnerabilities not detected by most scanners/payload sets:
+- file upload vulnerable to path traversal with the upload directory located inside the document root
+- file upload vulnerable to path traversal with the upload directory outside the document root
+- file upload not vulnerable to path traversal, but having the upload directory is inside of the document root, with no direct links to the uploaded file exposed by the application
+- local file inclusion/arbitrary file read vulnerable to path traversal with non-recurrent filters involved
 
+
+## Inisght into the file upload scenarios
 At this point, controlling the uploaded file contents/extension is not the focus. One thing at a time, first we just want to detect if we can upload a *legitimate* file anywhere in the webroot.
-
-## Inisght into scenarios
-### path traversal + upload dir outside the webroot
+### 1) Path traversal + upload dir outside the webroot
 
 Let's consider the following vulnerable Java servlet:
 
@@ -60,7 +61,7 @@ and so on. The remote webroot can depend on the platform, version, OS type, OS v
 Based on well-known server-specific webroot paths + target hostname + user-specified variables, psychoPATH attempts to generate a comprehensive list of all potentially valid paths to use while blindly searching for vulnerable file upload. This approach was directly inspired by the technique used in `--os-shell` mode in `sqlmap`.
 
 
-### path traversal + upload dir inside of the webroot
+### 2) Path traversal + upload dir inside of the webroot
 
 Let's go to our next scenario then, which will be a slightly modified version of the previous example.
 The code remains the same, traversal-vulnerable. The only difference is the configured upload directory. Instead of `/tmp/`, we use `/var/lib/tomcat8/webapps/uploadbase_traversal_inside_webroot/nowaytofindme/tmp`.
@@ -70,7 +71,7 @@ The `nowaytofindme/tmp` directory is not explicitly linked by the application an
 Luckily for us, the application is still vulnerable to path traversal.
 We do not even need to guess the webroot. The payload to do the trick (put the file to `/var/lib/tomcat8/webapps/uploadbase_traversal_inside_webroot`, so it can be accessed by requesting `http://example.org/uploadbase_traversal_inside_webroot/a.jpg` is simply `../../a.jpg`.
 
-### No path traversal + upload dir inside the webroot
+### 3) No path traversal + upload dir inside the webroot
 
 The third example is not vulnerable to path traversal. The upload directory is located in the webroot (`logs/tmp` -> `/var/lib/tomcat8/webapps/uploadbase_traversal_inside_webroot/logs/tmp`). We already know it exists, supposedly among multiple other directories, like `javascript/`, `css/` or `images/` - but we would not normally suspect any of these could be the actual upload directory (no directory listing + the uploaded file is not explicitly linked by the application).
 
@@ -80,7 +81,7 @@ So, the payload is simply `a.jpg`. The file (or its copy) is put under `logs/tmp
 There might be another vulnerable, hard to discover variant of a file upload function prone to path traversal. 
 Both traversal cases described above would not get detected if there was no +w permission on the webroot (`/var/lib/tomcat8/webapps/uploadbare_traversal_outside_webroot` and `/var/lib/tomcat8/webapps/uploadbare_traversal_inside_webroot`, respectively). The only spark of hope here is that any of the subdirectories, like `images/`, has such permission enabled. This is why all the directories inside the webroot are also worth shooting at explicitly, leading to payloads like `./../../../../../../../../var/lib/tomcat8/uploadbare_traversal_inside_webroot/images/a.jpg` or `./../images/a.jpg`.
 
-### Are any of these scenarios even likely?
+### Are any of these upload scenarios even likely?
 Not very (although all met in the wild, they are just quite rare), this is why it appeared sensible to automate the entire check.
 
 Speaking of path traversal, *most* of today's frameworks and languages are path traversal-proof. Still, sometimes they are not used properly. When it comes to languages, they usually (e.g. PHP) strip any path sequences from the standard variable holding the POST-ed file (`Content-Disposition: form-data; name="file"; filename="test.jpg"`), still it is quite frequent the application is using another user-supplied variable to rename the file after upload (and this is our likely-successful injection point).
@@ -98,7 +99,7 @@ The following is a general algorithm we employ to perform blind detection of any
 - if we find the file in any of the locations, we look into its contents to identify the unique string (payload mark), so we can track down the successful payload 
 
 ## The evasive payloads
-The basic traversal payload is `../`, or more generally `<DOT><DOT><SLASH>` (a holder-based approach will become handy once Windows support + encodings are involved).
+The basic traversal payload is `../`, or more generally `<DOT><DOT><SLASH>` (a holder-based approach will become handy once Windows support + encodings are involved). 
 
 The following are the potential bypassable filter scenarios:
 1) removing only `../`
@@ -106,6 +107,7 @@ The following are the potential bypassable filter scenarios:
 3) removing `../` and then `./`
 4) removing `./` and then `../`
 
+This applies both to file uploading and file reading (LFI), please see the psychoPATH usage - LFI hunting section for more details.
 A filter removing all occurrences of `..` or `/` does not seem to be bypassable (please let me know if I am wrong).
 
 1)
@@ -127,10 +129,11 @@ So, we only need three evasive payloads:
 - `...//`
 - `.....///`
 
-## Optimization
+
+## Webroot-guessing - optimization
 To reduce the eventual number of payloads, by default the tool does not prepend the same document root with traversal strings which differ only in the number of the traversal sequences they consist of (e.g. `../` vs `../../` vs `../../../`) - as these are redundant when used with absolute paths. Instead, only the longest variant is used, e.g. `.....///.....///.....///.....///.....///.....///.....///var/lib/tomcat8/webapps/upload`. This significantly reduces the number of payloads sent. It might, however, be an issue - if the variable we are injecting into is somehow limited on its length, e.g. application rejects any values longer than 45 characters and the upload directory is `/tmp` - in that case `.....///var/lib/tomcat8/webapps/upload` would do the trick instead. If you are worried about the payload length and you care less about the number of payloads, turn optimization off. 
 
-## psychoPATH usage
+## psychoPATH usage - hunting uploads in the dark
 
 The extension interface consists of several lists of elements used to build permutations of all potentially valid payloads:
 ![Demo Screenshot](screenshots/first_run.png?raw=true "Usage example")
@@ -201,6 +204,28 @@ For other two examples, the results for the payloads that have worked, would loo
 ![Demo Screenshot](screenshots/verification_case_3_step_1.png?raw=true "Usage example")
 ![Demo Screenshot](screenshots/verification_case_3_step_2.png?raw=true "Usage example")
 ![Demo Screenshot](screenshots/verification_case_3_step_3.png?raw=true "Usage example")
+
+## psychoPATH usage - hunting LFI
+The Path traversal generator can be easily used for hunting Local File Inclusion/arbitrary file reading issues as well - and it's much simpler than hunting uploads.
+The test_cases/LFI directory contains three vulnerable PHP scripts, reflecting the non-recurrent filter cases broken down in the "evasive payloads" section.
+
+Below is a short presentation on how all three can be quickly detected with the payloads provided by psychoPATH.
+First screenshot shows us the response of the script when a benign string `foo` is provided under the `file` variable. No content is returned:
+![Demo Screenshot](screenshots/lfi_hunting_one_1.png?raw=true "Usage example")
+
+We send the request to Intruder and mark the injection point:
+![Demo Screenshot](screenshots/lfi_hunting_one_2.png?raw=true "Usage example")
+We choose `Extension generated` `Path traversal` payload type.
+Please not unchecking the `URL-encode these characters` - as a matter of fact the most reliable approach is to test each input like this twice - with and without URL-encoding:
+![Demo Screenshot](screenshots/lfi_hunting_one_3.png?raw=true "Usage example")
+
+Then we move to the psychoPATH configuration panel. We choose the file name, for instance `/etc/passwd`. We clear the web roots, targets and suffixes list, as we are nog going to need them to perform this attack:
+![Demo Screenshot](screenshots/lfi_hunting_one_4.png?raw=true "Usage example")
+We simply run "Start attack" and watch how each of the evasive techniques works on its corresponding vulnerable case:
+![Demo Screenshot](screenshots/lfi_hunting_one_5.png?raw=true "Usage example")
+![Demo Screenshot](screenshots/lfi_hunting_two.png?raw=true "Usage example")
+![Demo Screenshot](screenshots/lfi_hunting_three.png?raw=true "Usage example")
+
 
 ## The perl script 
 Initially this tool was developed as a perl script - which is still available, although no longer maintained at the moment.
