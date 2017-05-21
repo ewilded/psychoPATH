@@ -206,7 +206,7 @@ For other two examples, the results for the payloads that have worked, would loo
 Initially this tool was developed as a perl script - which is still available, although no longer maintained at the moment.
 
 ### TODO
-- there are still redundant payloads generated (probably due to an empty suffix) - eliminate duplicates
+- present examples on how to use psychoPATH to discover LFI (evasive techniques)/ and selective content discovery (dir checking mode)
 - test on different resolution, make sure the project is easily runnable/importable
 - separate apache-like suffixes from the main list, they are there by default and do not go away once other than all/apache webroot set is picked
 - more examples of test cases
@@ -214,5 +214,6 @@ Initially this tool was developed as a perl script - which is still available, a
 - Nice-to-haves:
 - implement windows support
 - add a "Copy to clipboard" button for generated payloads, so the output payloads can be used with other tools
-- add support for ZIP traversals? :>
-- in  case of a positive result, automatically track back the payload that did the trick (instead of the dir check mode?)
+- add support for ZIP traversals
+- extend the tool with extension control mode (defeating the filters in order to upload an executable - different tricks depending on the platform)??
+- in case of a positive result, automatically track back the payload that did the trick (instead of the dir check mode?)
