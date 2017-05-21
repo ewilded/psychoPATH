@@ -92,10 +92,10 @@ When it comes to uploading files to hidden/not explicitly linked directories in 
 
 The following is a general algorithm we employ to perform blind detection of any of the cases mentioned above:
 - upload a legitimate file that is accepted by the application (a benign filename, extension, format and size) - we want to avoid false negatives due to any additional validation checks performed by the application
-- estimate the possible potentially valid webroots, including their variants with webroot-located subdirectories and path traversal payloads (both relative, like `../../a.jpg` and absolute, like `./../../../var/lib/tomcat6/webapps/servletname/a.jpg`, `./../../../var/lib/tomcat6/webapps/servletname/img/a.jpg` and so on)
-- attempt to upload the file using all the payloads from the step above, placing a unique string in each file we attempt to upload (this step is automated and customizable)
+- estimate the possible potentially valid webroots, including their variants with webroot-located subdirectories and path traversal payloads (both relative, like `../../a.jpg` and absolute, like `./../../../var/lib/tomcat6/webapps/servletname/a.jpg`, `./../../../var/lib/tomcat6/webapps/servletname/img/a.jpg` and so on) - this step is automated and customizable
+- attempt to upload the file using all the payloads from the step above, placing a unique string in each file we attempt to upload (this step is automated and customizable as well)
 - search for the uploaded file by attempting GETs to all known directories in the webroot, e.g. http://example.org/a.jpg, http://example.org/img/a.jpg and so on (this step is automated as well)
-- if we find the file in any of the locations (this step is automated as well), we look into its contents to identify the unique string (payload mark), so we can track down the successful payload 
+- if we find the file in any of the locations, we look into its contents to identify the unique string (payload mark), so we can track down the successful payload 
 
 ## The evasive payloads
 The basic traversal payload is `../`, or more generally `<DOT><DOT><SLASH>` (a holder-based approach will become handy once Windows support + encodings are involved).
@@ -128,7 +128,7 @@ So, we only need three evasive payloads:
 - `.....///`
 
 ## Optimization
-To reduce the eventual number of payloads, by default the tool does not prepend the same document root with traversal strings which differ only in the number of the traversal sequences they consist of (e.g. `../` vs `../../` vs `../../../`) - as these are redundant when used with absolute paths. Instead, only the longest variant is used, e.g. `.....///.....///.....///.....///.....///.....///.....///var/lib/tomcat8/webapps/upload`. This significantly reduces the number of payloads sent. It might, however, be an issue - if the variable we are injecting into is somehow limited on its length, e.g. application rejects any values longer than 45 characters and the upload directoru is `/tmp` - in that case `.....///var/lib/tomcat8/webapps/upload` would do the trick instead. If you are worried about the payload length and you care less about the number of payloads, turn optimization off. 
+To reduce the eventual number of payloads, by default the tool does not prepend the same document root with traversal strings which differ only in the number of the traversal sequences they consist of (e.g. `../` vs `../../` vs `../../../`) - as these are redundant when used with absolute paths. Instead, only the longest variant is used, e.g. `.....///.....///.....///.....///.....///.....///.....///var/lib/tomcat8/webapps/upload`. This significantly reduces the number of payloads sent. It might, however, be an issue - if the variable we are injecting into is somehow limited on its length, e.g. application rejects any values longer than 45 characters and the upload directory is `/tmp` - in that case `.....///var/lib/tomcat8/webapps/upload` would do the trick instead. If you are worried about the payload length and you care less about the number of payloads, turn optimization off. 
 
 ## psychoPATH usage
 
@@ -206,6 +206,7 @@ For other two examples, the results for the payloads that have worked, would loo
 Initially this tool was developed as a perl script - which is still available, although no longer maintained at the moment.
 
 ### TODO
+- there are still redundant payloads generated (probably due to an empty suffix) - eliminate duplicates
 - test on different resolution, make sure the project is easily runnable/importable
 - separate apache-like suffixes from the main list, they are there by default and do not go away once other than all/apache webroot set is picked
 - more examples of test cases
