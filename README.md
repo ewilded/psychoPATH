@@ -233,7 +233,7 @@ Initially this tool was developed as a perl script - which is still available, a
 ### TODO
 - add more configuration options:
   - windows different drive letters support for absolute webroots
-  - add windows docroots
+  - ..\..\C:\Inetpub\vhosts\\\a.jpg and ../../C:/Inetpub/vhosts///a.jpg are sufficient variants, mixed-slash ones like ..\..\C:/Inetpub/vhosts///a.jpg are IMO redundant and should be avoided to reduce the number of payloads (this, however, will not apply to the mixed-slash evasive techniques)
   - windows evasive techniques (the ones mentioned here https://soroush.secproject.com/blog/2014/07/file-upload-and-php-on-iis-wildcards/)
   - make the break-up character configurable (it is a fixed space atm) - preferably with a list expressed in ascii-dec/ascii-hex
   - any evasive techniques being a mix of \ and /? e.g. ....\/ -> rm ..\ -> ../
