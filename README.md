@@ -231,12 +231,19 @@ We simply run "Start attack" and watch how each of the evasive techniques works 
 Initially this tool was developed as a perl script - which is still available, although no longer maintained at the moment.
 
 ### TODO
+- add more configuration options:
+  - LFI mode
+  - use absolute paths with webroots (no traversal payload involved at all, just like it used to be in the original perl script)
+  - windows backslash \ support
+  - windows drive letters support for absolute webroots
+  - windows evasive techniques
+  - auto append/prepend the evasive payload with arbitrary characters (e.g. space)?? before, between dots, after dots, after slash? (four checkboxes) + list of characters to append, preferably set in ascii-dec/ascii-hex
+  - any evasive techniques being a mix of \ and /? e.g. ....\/ -> rm ..\ -> ../
+  - auto append the filename with arbitrary characters (preferably set in ascii-dec/ascii-hex, useful for LFI mode, but could as well be used to bypass extension controls, cause why not)
+- Nice-to-haves:
 - test on different resolution, make sure the project is easily runnable/importable
 - separate apache-like suffixes from the main list, they are there by default and do not go away once other than all/apache webroot set is picked
 - more examples of test cases
-- test evasive techniques involving the windows \ backslash in different environments
-- Nice-to-haves:
-- implement windows support
 - add a "Copy to clipboard" button for generated payloads, so the output payloads can be used with other tools
 - add support for ZIP traversals
 - extend the tool with extension control mode (defeating the filters in order to upload an executable - different tricks depending on the platform)??
