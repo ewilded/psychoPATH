@@ -219,7 +219,7 @@ We choose `Extension generated` `Path traversal` payload type.
 Please not unchecking the `URL-encode these characters` - as a matter of fact the most reliable approach is to test each input like this twice - with and without URL-encoding:
 ![Demo Screenshot](screenshots/lfi_hunting_one_3.png?raw=true "Usage example")
 
-Then we move to the psychoPATH configuration panel. We choose the file name, for instance `/etc/passwd`. We clear the web roots, targets and suffixes list, as we are nog going to need them to perform this attack:
+Then we move to the psychoPATH configuration panel. We choose the file name, for instance `/etc/passwd`. We clear the web roots, targets and suffixes list, as we are not going to need them to perform this attack:
 ![Demo Screenshot](screenshots/lfi_hunting_one_4.png?raw=true "Usage example")
 We simply run "Start attack" and watch how each of the evasive techniques works on its corresponding vulnerable case:
 ![Demo Screenshot](screenshots/lfi_hunting_one_5.png?raw=true "Usage example")
@@ -232,14 +232,13 @@ Initially this tool was developed as a perl script - which is still available, a
 
 ### TODO
 - add more configuration options:
-  - LFI mode
-  - use absolute paths with webroots (no traversal payload involved at all, just like it used to be in the original perl script)
-  - windows backslash \ support
-  - windows drive letters support for absolute webroots
-  - windows evasive techniques
-  - auto append/prepend the evasive payload with arbitrary characters (e.g. space)?? before, between dots, after dots, after slash? (four checkboxes) + list of characters to append, preferably set in ascii-dec/ascii-hex
+  - windows different drive letters support for absolute webroots
+  - add windows docroots
+  - windows evasive techniques (the ones mentioned here https://soroush.secproject.com/blog/2014/07/file-upload-and-php-on-iis-wildcards/)
+  - make the break-up character configurable (it is a fixed space atm) - preferably with a list expressed in ascii-dec/ascii-hex
   - any evasive techniques being a mix of \ and /? e.g. ....\/ -> rm ..\ -> ../
-  - auto append the filename with arbitrary characters (preferably set in ascii-dec/ascii-hex, useful for LFI mode, but could as well be used to bypass extension controls, cause why not)
+  - auto append the filename with arbitrary characters (preferably set in ascii-dec/ascii-hex, useful for LFI mode, but could as well be used to bypass extension controls, cause why not - but we'd rather implement this as another mode, once we're already able to upload legitimate files to the webroot)?
+  - replace the lengthy screenshots with videos presenting different operation modes
 - Nice-to-haves:
 - test on different resolution, make sure the project is easily runnable/importable
 - separate apache-like suffixes from the main list, they are there by default and do not go away once other than all/apache webroot set is picked
