@@ -219,7 +219,7 @@ We choose `Extension generated` `Path traversal` payload type.
 Please not unchecking the `URL-encode these characters` - as a matter of fact the most reliable approach is to test each input like this twice - with and without URL-encoding:
 ![Demo Screenshot](screenshots/lfi_hunting_one_3.png?raw=true "Usage example")
 
-Then we move to the psychoPATH configuration panel. We choose the file name, for instance `/etc/passwd`. We clear the web roots, targets and suffixes list, as we are nog going to need them to perform this attack:
+Then we move to the psychoPATH configuration panel. We choose the file name, for instance `/etc/passwd`. We clear the web roots, targets and suffixes list, as we are not going to need them to perform this attack:
 ![Demo Screenshot](screenshots/lfi_hunting_one_4.png?raw=true "Usage example")
 We simply run "Start attack" and watch how each of the evasive techniques works on its corresponding vulnerable case:
 ![Demo Screenshot](screenshots/lfi_hunting_one_5.png?raw=true "Usage example")
@@ -231,12 +231,17 @@ We simply run "Start attack" and watch how each of the evasive techniques works 
 Initially this tool was developed as a perl script - which is still available, although no longer maintained at the moment.
 
 ### TODO
+- add more configuration options:
+  - C:\Inetpub\vhosts\\\a.jpg and C:/Inetpub/vhosts///a.jpg are sufficient variants, mixed-slash ones like C:/Inetpub/vhosts//\a.jpg are IMO redundant and should be avoided to reduce the number of payloads (this, however, will not apply to the mixed-slash evasive techniques)
+  - windows evasive techniques (the ones mentioned here https://soroush.secproject.com/blog/2014/07/file-upload-and-php-on-iis-wildcards/)
+  - make the break-up character configurable (it is a fixed space atm) - preferably with a list expressed in ascii-dec/ascii-hex
+  - any evasive techniques being a mix of \ and /? e.g. ....\/ -> rm ..\ -> ../
+  - auto append the filename with arbitrary characters (preferably set in ascii-dec/ascii-hex, useful for LFI mode, but could as well be used to bypass extension controls, cause why not - but we'd rather implement this as another mode, once we're already able to upload legitimate files to the webroot)?
+  - replace the lengthy screenshots with videos presenting different operation modes
+- Nice-to-haves:
 - test on different resolution, make sure the project is easily runnable/importable
 - separate apache-like suffixes from the main list, they are there by default and do not go away once other than all/apache webroot set is picked
 - more examples of test cases
-- test evasive techniques involving the windows \ backslash in different environments
-- Nice-to-haves:
-- implement windows support
 - add a "Copy to clipboard" button for generated payloads, so the output payloads can be used with other tools
 - add support for ZIP traversals
 - extend the tool with extension control mode (defeating the filters in order to upload an executable - different tricks depending on the platform)??
