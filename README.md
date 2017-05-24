@@ -236,9 +236,12 @@ Initially this tool was developed as a perl script - which is still available, a
   - windows evasive techniques (the ones mentioned here https://soroush.secproject.com/blog/2014/07/file-upload-and-php-on-iis-wildcards/)
   - make the break-up character configurable (it is a fixed space atm) - preferably with a list expressed in ascii-dec/ascii-hex
   - any evasive techniques being a mix of \ and /? e.g. ....\/ -> rm ..\ -> ../
+  - include the filename in the supported slashes variants
   - auto append the filename with arbitrary characters (preferably set in ascii-dec/ascii-hex, useful for LFI mode, but could as well be used to bypass extension controls, cause why not - but we'd rather implement this as another mode, once we're already able to upload legitimate files to the webroot)?
-  - replace the lengthy screenshots with videos presenting different operation modes
-- Nice-to-haves:
+  - replace the lengthy screenshots with videos presenting different operation modes or a separate PDF
+  - update the readme with the latest improvements
+  - add output encodings to evasive techniques (none atm, want to be able to choose/add URL, double URL and UTF)
+#### Nice-to-haves:
 - test on different resolution, make sure the project is easily runnable/importable
 - separate apache-like suffixes from the main list, they are there by default and do not go away once other than all/apache webroot set is picked
 - more examples of test cases
