@@ -16,7 +16,7 @@ This tool helps to discover several kinds of vulnerabilities not detected by mos
 Also, the `Directory checker` payload generator can be used for other purposes, e.g. selective invasive content discovery or checking allowed HTTP methods per directory. 
 
 At the moment, this plugin extends Burp Intruder with three payload generators:
-![Demo Screenshot] (screenshots/payload_generators.png?raw=true "Payload generators")
+![Demo Screenshot](screenshots/payload_generators.png?raw=true "Payload generators")
 
 To see detailed usage examples for all payload generators and scenarios, please see [usage_examples.pdf](https://www.github.com/ewilded/psychoPATH/blob/master/usage_examples.pdf.pdf?raw=true)
 
