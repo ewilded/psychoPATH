@@ -1,0 +1,14 @@
+### TODO
+- add more configuration options:
+  - windows evasive techniques (the ones mentioned here https://soroush.secproject.com/blog/2014/07/file-upload-and-php-on-iis-wildcards/)
+  - any evasive techniques being a mix of \ and /? e.g. ....\/ -> rm ..\ -> ../
+  - add the ability to append the filename with arbitrary characters (manageable just like the break-up strings - useful for LFI mode, but could as well be used to bypass extension controls - which will be implemented as another mode -> another payload generator to use, once we're already able to upload legitimate files to the webroot) + configurable list of benign extensions (jpg, jpeg, png, gif, whatever)
+  - replace the lengthy screenshots with videos presenting different operation modes or a separate PDF
+#### Nice-to-haves:
+- test on different resolution, make sure the project is easily runnable/importable
+- separate apache-like suffixes from the main list, they are there by default and do not go away once other than all/apache webroot set is picked
+- more examples of test cases
+- add a "Copy to clipboard" button for generated payloads, so the output payloads can be used with other tools
+- add support for ZIP traversals
+- extend the tool with extension control mode (defeating the filters in order to upload an executable - different tricks depending on the platform)??
+- in case of a positive result, automatically track back the payload that did the trick (instead of the dir check mode?)
