@@ -18,7 +18,7 @@ Also, the `Directory checker` payload generator can be used for other purposes, 
 At the moment, this plugin extends Burp Intruder with three payload generators:
 ![Demo Screenshot](screenshots/payload_generators.png?raw=true "Payload generators")
 
-To see detailed usage examples for all payload generators and scenarios, please see [usage_examples.pdf](https://www.github.com/ewilded/psychoPATH/blob/master/usage_examples.pdf.pdf?raw=true)
+***To see detailed usage examples for all payload generators and scenarios (e.g. LFI hunting), please go to***  [usage_examples.pdf](https://www.github.com/ewilded/psychoPATH/blob/master/usage_examples.pdf.pdf?raw=true)
 
 ## Insight into the file upload scenarios
 At this point, controlling the uploaded file contents/extension is not the focus. One thing at a time, first we just want to detect if we can upload a *legitimate* file anywhere in the webroot.
