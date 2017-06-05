@@ -1,6 +1,6 @@
 Original work by: Julian H. https://github.com/ewilded/psychoPATH
 
-# psychoPATH - a blind webroot file upload & LFI detection tool
+# psychoPATH - a blind webroot file upload & LFI detection tool (now available in the Burp App Store!)
 ![Logo](logo_by_Sponge_Nutter.png?raw=true "Logo by Sponge Nutter")
 ## psychoPATH - hunting file uploads & LFI in the dark
 This tool is a highly configurable payload generator detecting LFI & web root file uploads. Involves advanced path traversal evasive techniques, dynamic web root list generation, output encoding, site map-searching payload generator, LFI mode, nix & windows support. 
