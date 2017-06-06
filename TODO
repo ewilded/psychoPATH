@@ -1,6 +1,7 @@
 ### TODO
+- the directory checker mode is including the filename into the payloads, which is not the intended behaviour, requires fixing
 - add the ability to prefix the absolute path with the file:/// protocol handler
-- add $ and > as default breakup sequences (works nice with python on flex - these are automatically removed and not replaced with anything)
+- add $ and > as default breakup sequences (works nice with python - these are automatically removed and not replaced with anything)
 - add more configuration options:
   - windows evasive techniques (the ones mentioned here https://soroush.secproject.com/blog/2014/07/file-upload-and-php-on-iis-wildcards/)
   - any evasive techniques being a mix of \ and /? e.g. ....\/ -> rm ..\ -> ../
