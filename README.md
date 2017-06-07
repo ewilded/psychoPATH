@@ -1,9 +1,9 @@
 Original work by: Julian H. https://github.com/ewilded/psychoPATH
 
-# psychoPATH - a blind webroot file upload & LFI detection tool (now available in the Burp App Store!)
+# psychoPATH - a blind webroot file upload & LFI detection tool  (now available in the Burp App Store!)
 ![Logo](logo_by_Sponge_Nutter.png?raw=true "Logo by Sponge Nutter")
-## psychoPATH - hunting file uploads & LFI in the dark 
-This tool is a highly configurable payload generator detecting LFI & web root file uploads. Involves advanced path traversal evasive techniques, dynamic web root list generation, output encoding, site map-searching payload generator, LFI mode, nix & windows support. 
+## psychoPATH - hunting file uploads & LFI in the dark
+This tool is a highly configurable payload generator detecting LFI & web root file uploads. Involves advanced path traversal evasive techniques, dynamic web root list generation, output encoding, site map-searching payload generator, LFI mode, nix & windows support plus single byte generator. 
 
 ![Demo Screenshot](screenshots/first_run.png?raw=true "User interface")
 
@@ -17,6 +17,19 @@ Also, the `Directory checker` payload generator can be used for other purposes, 
 
 At the moment, this plugin extends Burp Intruder with four payload generators:
 ![Demo Screenshot](screenshots/payload_generators.png?raw=true "Payload generators")
+
+### Byte generator
+Additionally, another payload generator simply called `Byte` is available. It simply generates single bytes from the chosen range.
+Available ranges:
+- non-alphanumeric
+- alphanumeric 
+- non-alphanumeric printable
+- non-alphanumeric non-printable
+- all
+
+This is quite handy for general fuzzing, discovering bad characters where feedback from the application is available, defeating filters (like file upload extension control), searching for a an effective string terminator (a character that makes the application to ignore the following string - usually white characters or some format separators like ,',| etc.) and so on.
+
+This generator produces output in accordance to the global psychoPATH output encoding settings (available: none, URL, doubleURL as of writing this).
 
 ## To see detailed usage examples for all payload generators and scenarios (e.g. LFI hunting), please go to [usage_examples.pdf](https://www.github.com/ewilded/psychoPATH/blob/master/usage_examples.pdf.pdf?raw=true)
 
@@ -166,19 +179,6 @@ Or, more generally, `.{BREAKUP}.{BREAKUP}/`.
 The breakup sequence is fully configurable, just as the list of the traversal payloads with the `{BREAKUP}` holder.
 
 The breakup sequence might be a white space (or some other white character, as these are frequently removed from the user input). It might, as well, be some 'bad' word, like 'select' or 'script', if the application is stupid enough to try to prevent input validation problems by cutting out 'dangerous' strings from the user input - and keep processing it further - which creates cross-filter interferences leading to this kind of bypasses.
-
-### Byte generator
-Additionally, another payload generator simply called `Byte` is available. It simply generates single bytes from the chosen range.
-Available ranges:
-- non-alphanumeric
-- alphanumeric 
-- non-alphanumeric printable
-- non-alphanumeric non-printable
-- all
-
-This is quite handy for general fuzzing, discovering bad characters where feedback from the application is available, defeating filters (like file upload extension control), searching for a an effective string terminator (a character that makes the application to ignore the following string - usually white characters or some format separators like ,',| etc.) and so on.
-
-This generator produces output in accordance to the global psychoPATH output encoding settings (available: none, URL, doubleURL as of writing this).
 
 ### Output encoding
 At the moments, all the output payloads can be encoded with use of all/any of the following encodings:
