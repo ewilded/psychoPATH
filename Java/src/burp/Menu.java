@@ -29,9 +29,9 @@ public class Menu implements IContextMenuFactory {
             public void mouseReleased(MouseEvent e) {
                 IHttpRequestResponse[] selectedItems = invocation.getSelectedMessages();
                 for (IHttpRequestResponse selectedItem : selectedItems) {
-                    host = selectedItem.getHost();
-                    proto = selectedItem.getProtocol();
-                    path = selectedItem.getUrl().getPath();
+                    host = selectedItem.getHttpService().getHost();
+                    proto = selectedItem.getHttpService().getProtocol();
+                    path = callbacks.getHelpers().analyzeRequest(selectedItem).getUrl().getPath();
                 }
                 PsychoPATH.PsychoTab.psychoPanel.updateScope(proto,host);
                 //PsychoPATH.PsychoTab.psychoPanel.logOutput("method called 1"+"\n");                               
