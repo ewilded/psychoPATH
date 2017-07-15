@@ -1,0 +1,11 @@
+<p>This extension provides a customizable payload generator, suitable for 
+detecting a variety of file path vulnerabilities in file upload and download 
+functionality:</p>
+<ul>
+  <li>File upload vulnerable to path traversal with the upload directory located inside the document root.</li>
+  <li>File upload vulnerable to path traversal with the upload directory outside the document root.</li>
+  <li>File upload not vulnerable to path traversal, but having the upload directory is inside of the document root, with no direct links to the uploaded file exposed by the application.</li>
+  <li>Local file inclusion/arbitrary file read vulnerable to path traversal with non-recurrent filters involved.</li>
+</ul>
+<p>More information, including the code and usage examples can be found at <a href="http://github.com/ewilded/psychoPATH">http://github.com/ewilded/psychoPATH</a></p>
+
