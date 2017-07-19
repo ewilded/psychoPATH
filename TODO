@@ -1,4 +1,5 @@
 ### TODO
+- minor issues with the GUI on lower resolutions
 - for foo.bar.com domains, add foobar, barfoo webroot targets
 - consider /.. and ./ non-recursive filters
 - add the ability to prefix the absolute path with the file:/// protocol handler
