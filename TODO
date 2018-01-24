@@ -1,4 +1,5 @@
 ### TODO
+- mixed-encoding payloads ARE a good idea: https://hackerone.com/reports/307666
 - Scanner integration for the LFI mode
 - Scanner integration/full automation of the upload mode is also worth implementing - as an addition to semi-automated Intruder
 - for foo.bar.com domains, add foobar, barfoo webroot targets
