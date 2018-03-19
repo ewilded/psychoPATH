@@ -24,6 +24,9 @@ public class BurpExtender implements IBurpExtender, IExtensionStateListener {
         callbacks.registerIntruderPayloadGeneratorFactory(new PayloadFactory(PsychoPATH.PsychoTab, "check"));
         callbacks.registerIntruderPayloadGeneratorFactory(new PayloadFactory(PsychoPATH.PsychoTab, "path"));
         callbacks.registerIntruderPayloadGeneratorFactory(new PayloadFactory(PsychoPATH.PsychoTab, "mark"));
+        
+        callbacks.registerScannerCheck(new DirectScannerCheck(callbacks,PsychoPATH.PsychoTab));
+        
         callbacks.registerContextMenuFactory(new Menu(callbacks));
     }
 
