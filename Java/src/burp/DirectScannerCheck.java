@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.net.URL;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import uk.co.pentest.psychoPATH.IntruderPayloadGenerator;
 import uk.co.pentest.psychoPATH.PsychoTab;
 
@@ -47,6 +49,7 @@ public class DirectScannerCheck extends PsychoPATHScannerCheck {
         {            
                 this.issues = null;                             
                 
+                if(this.tab.psychoPanel.scannerChecks==false) return this.issues; // the "Enable Scanner checks" checkbox
         	IRequestInfo reqInfo = helpers.analyzeRequest(baseRequestResponse);
 		URL url = reqInfo.getUrl();
                 int port = url.getPort();
@@ -72,7 +75,19 @@ public class DirectScannerCheck extends PsychoPATHScannerCheck {
 			callbacks.issueAlert("Payload generation failed!");
                         return this.issues;
                     }
-                    byte [] req = insertionPoint.buildRequest(payload);
+                    // To avoid Burp's default behaviour with automatic encoding of insertion points in Scanner
+                    // we replaced "byte [] req = insertionPoint.buildRequest(payload);"
+                    // with new BuildUnencodedRequest(helpers).buildUnencodedRequest(insertionPoint, helpers.stringToBytes(payload))
+                    // as adviced by Paj: https://support.portswigger.net/customer/portal/questions/17301079-design-new-extension-problem-with-buildrequest-and-url-encode
+                    // with his code snippet: https://gist.github.com/pajswigger/c1fff3ce6e5637126ff92bf57fba54e1
+                    
+                    byte [] req=null;
+                    try {
+                        req = new BuildUnencodedRequest(helpers).buildUnencodedRequest(insertionPoint, payload);
+                    } catch (Exception ex) {
+                        Logger.getLogger(DirectScannerCheck.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
                     //callbacks.printError((new String(req))+"\n\n");                  
                     attackReq = callbacks.makeHttpRequest(baseRequestResponse.getHttpService(),req);
                     byte[] resp = attackReq.getResponse();
