@@ -14,7 +14,6 @@ package burp;
 import java.util.List;
 import java.util.ArrayList;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import uk.co.pentest.psychoPATH.IntruderPayloadGenerator;
@@ -48,8 +47,7 @@ public class DirectScannerCheck extends PsychoPATHScannerCheck {
 	public List<IScanIssue> doActiveScan(IHttpRequestResponse baseRequestResponse,IScannerInsertionPoint insertionPoint) 
         {            
                 this.issues = null;                             
-                
-                if(this.tab.psychoPanel.scannerChecks==false) return this.issues; // the "Enable Scanner checks" checkbox
+                if(this.tab.psychoPanel.scannerChecksCheckbox.isSelected()==false) return this.issues; // the "Enable Scanner checks" checkbox                
         	IRequestInfo reqInfo = helpers.analyzeRequest(baseRequestResponse);
 		URL url = reqInfo.getUrl();
                 int port = url.getPort();
