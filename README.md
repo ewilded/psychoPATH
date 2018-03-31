@@ -15,6 +15,8 @@ This tool is a highly configurable payload generator detecting LFI & web root fi
 
 ![Demo Screenshot](screenshots/new_ui5.png?raw=true "User interface")
 
+![Demo Screenshot](screenshots/new_ui6.png?raw=true "User interface")
+
 This tool helps to discover several kinds of vulnerabilities not detected by most known scanners and payload sets:
 - local file inclusion/arbitrary file read vulnerable to path traversal with weak filters involved (e.g. non-recurrent)
 - file upload vulnerable to path traversal with the upload directory located inside the document root
