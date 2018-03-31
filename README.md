@@ -5,7 +5,15 @@ Original work by: Julian H. https://github.com/ewilded/psychoPATH
 ## psychoPATH - hunting file uploads & LFI in the dark
 This tool is a highly configurable payload generator detecting LFI & web root file uploads. Involves advanced path traversal evasive techniques, dynamic web root list generation, output encoding, site map-searching payload generator, LFI mode, nix & windows support plus single byte generator. 
 
-![Demo Screenshot](screenshots/first_run.png?raw=true "User interface")
+![Demo Screenshot](screenshots/new_ui.png?raw=true "User interface")
+
+![Demo Screenshot](screenshots/new_ui2.png?raw=true "User interface")
+
+![Demo Screenshot](screenshots/new_ui3.png?raw=true "User interface")
+
+![Demo Screenshot](screenshots/new_ui4.png?raw=true "User interface")
+
+![Demo Screenshot](screenshots/new_ui5.png?raw=true "User interface")
 
 This tool helps to discover several kinds of vulnerabilities not detected by most known scanners and payload sets:
 - local file inclusion/arbitrary file read vulnerable to path traversal with weak filters involved (e.g. non-recurrent)
