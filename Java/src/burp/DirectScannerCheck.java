@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ListModel;
 import uk.co.pentest.psychoPATH.IntruderPayloadGenerator;
 import uk.co.pentest.psychoPATH.PsychoTab;
 
@@ -99,18 +100,28 @@ public class DirectScannerCheck extends PsychoPATHScannerCheck {
                     //[files]
                     //[Mail]
                     //MAPI=1
-                    String response =  this.helpers.bytesToString(resp);                    
-                    if(response.contains("root:x:")||response.contains("[mci extensions]")) // we either hit something that looks like /etc/passwd or win.ini
-                    {
-                        // we also might check for some interesting error messages or even use backslash's comparison mechanism to detect changes in the response
-                        // anyway, let's raise an issue, abort further checks                        
-                        //callbacks.printError(new String(exploitRR.getResponse()));					
-                        this.issues = new ArrayList<IScanIssue>(1);			
-                        BinaryPayloadIssue issue;
-                        issue = new BinaryPayloadIssue(callbacks,attackReq,"");
-                        this.issues.add((IScanIssue) issue);
-                        return this.issues;                        
-                    }
+                    String response =  this.helpers.bytesToString(resp);      
+                    
+                    ListModel scanChecksModel = tab.psychoPanel.scannerMatchRules.getModel();
+        
+                    // make sure the string is not already on the list
+                    for(int i=0;i<scanChecksModel.getSize();i++)
+                    {                        
+                        if(response.contains(scanChecksModel.getElementAt(i).toString()))
+                        {
+                                // avoid duplicates
+                                // we also might check for some interesting error messages or even use backslash's comparison mechanism to detect changes in the response
+                                // anyway, let's raise an issue, abort further checks                        
+                                //callbacks.printError(new String(exploitRR.getResponse()));					
+                                this.issues = new ArrayList<IScanIssue>(1);			
+                                BinaryPayloadIssue issue;
+                                issue = new BinaryPayloadIssue(callbacks,attackReq,"");
+                                this.issues.add((IScanIssue) issue);
+                                return this.issues;                                   
+                        }
+                    }                      
+                    //if(response.contains("root:x:")||response.contains("[mci extensions]")) // we either hit something that looks like /etc/passwd or win.ini
+                    
                 }               
                 return this.issues;
         }	                
