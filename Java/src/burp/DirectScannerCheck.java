@@ -62,7 +62,7 @@ public class DirectScannerCheck extends PsychoPATHScannerCheck {
                     callbacks.issueAlert("HTTP connection failed");
                     return issues;
                 }
-                generator = new IntruderPayloadGenerator("path",tab);               
+                generator = new IntruderPayloadGenerator("path",tab,true);                  
 
                 while(generator.hasMorePayloads())
                 {
@@ -119,9 +119,7 @@ public class DirectScannerCheck extends PsychoPATHScannerCheck {
                                 this.issues.add((IScanIssue) issue);
                                 return this.issues;                                   
                         }
-                    }                      
-                    //if(response.contains("root:x:")||response.contains("[mci extensions]")) // we either hit something that looks like /etc/passwd or win.ini
-                    
+                    }                                                              
                 }               
                 return this.issues;
         }	                
