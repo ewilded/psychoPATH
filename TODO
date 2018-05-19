@@ -11,7 +11,7 @@ Double URL encoding:
 UTF-8 Unicode encoding:   
 . = %c0%2e, %e0%40%ae, %c0ae, / = %c0%af, %e0%80%af, %c0%2f, \ = %c0%5c, %c0%80%5c
 
-2 replies 42 retweets 129 likes
+- I don't think we ever generate payloads with the base value as suffix... https://t.co/tbI4Zfun7u ouch!
 - mixed-encoding payloads ARE a good idea: https://hackerone.com/reports/307666
 - Scanner integration for the LFI mode
 - Scanner integration/full automation of the upload mode is also worth implementing - as an addition to semi-automated Intruder
