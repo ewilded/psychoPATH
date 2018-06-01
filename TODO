@@ -1,4 +1,6 @@
 ### TODO
+Add output encoding setting to the byte generator.
+
 - UTF:
 Directory Traversal Checklist:
 
