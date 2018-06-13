@@ -1,4 +1,6 @@
 ### TODO
+- consider replacing /etc/passwd -> root: detection pattern with /etc/resolv.conf -> nameserver or /etc/hosts -> localhost pattern (dockerized apps usually don't have passwd in the container)
+- introduce best effort payloads
 Add output encoding setting to the byte generator.
 
 - UTF:
