@@ -1,5 +1,6 @@
 ### TODO
 - consider replacing /etc/passwd -> root: detection pattern with /etc/resolv.conf -> nameserver or /etc/hosts -> localhost pattern (dockerized apps usually don't have passwd in the container)
+- redirect support in scanner would also be nice, although seems a bit pain in the ass with the current API
 - introduce best effort payloads
 Add output encoding setting to the byte generator.
 
