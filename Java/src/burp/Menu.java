@@ -10,9 +10,6 @@ import uk.co.pentest.psychoPATH.PsychoPATH;
 public class Menu implements IContextMenuFactory {
     private IExtensionHelpers helpers;
     private IBurpExtenderCallbacks callbacks;
-    private String host;
-    private String proto;
-    private String path;
     
     public Menu(IBurpExtenderCallbacks callbacks) {
         helpers = callbacks.getHelpers();
@@ -27,14 +24,14 @@ public class Menu implements IContextMenuFactory {
 	item.addMouseListener(new MouseListener() {            
             @Override
             public void mouseReleased(MouseEvent e) {
+                
                 IHttpRequestResponse[] selectedItems = invocation.getSelectedMessages();
-                for (IHttpRequestResponse selectedItem : selectedItems) {
-                    host = selectedItem.getHttpService().getHost();
-                    proto = selectedItem.getHttpService().getProtocol();
-                    path = callbacks.getHelpers().analyzeRequest(selectedItem).getUrl().getPath();
-                }
-                PsychoPATH.PsychoTab.psychoPanel.updateScope(proto,host);
-                //PsychoPATH.PsychoTab.psychoPanel.logOutput("method called 1"+"\n");                               
+                if(selectedItems.length>0)
+                {                   
+                    String host = selectedItems[0].getHttpService().getHost();
+                    String proto = selectedItems[0].getHttpService().getProtocol();                    
+                    PsychoPATH.PsychoTab.psychoPanel.updateScope(proto,host);
+                }                
             }
             @Override
             public void mouseClicked(MouseEvent e) {
