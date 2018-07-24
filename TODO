@@ -1,4 +1,5 @@
 ### TODO
+- there a minor issue with the directory checker - when payloads are removed from the relative dirs (the list coming from the "Propagate to psychoPATH" option), they are still used in the attack, prolly cause the intruder payload generator is operating on a copy instead of the list object directly
 - consider replacing /etc/passwd -> root: detection pattern with /etc/resolv.conf -> nameserver or /etc/hosts -> localhost pattern (dockerized apps usually don't have passwd in the container)
 - redirect support in scanner would also be nice, although seems a bit pain in the ass with the current API
 - introduce best effort payloads
